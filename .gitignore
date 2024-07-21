@@ -9,6 +9,9 @@
 # testing
 /coverage
 
+public/csv/
+
+
 # next.js
 /.next/
 /out/
