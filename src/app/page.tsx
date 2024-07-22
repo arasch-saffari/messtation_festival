@@ -183,7 +183,7 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4 ">
       <h1 className="text-2xl font-bold mb-4 text-white-900 mx-auto text-center">
-        Mess-Station - Zug Vögel Festival
+        Messwerte - Zug Vögel Festival
       </h1>
       {latestEntry && (
         <div
