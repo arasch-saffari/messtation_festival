@@ -50,31 +50,38 @@ export default function Home() {
   }>({ key: "Datum", direction: "asc" });
 
   useEffect(() => {
-    fetch("/api/latest-csv")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.latestFile) {
-          return fetch(`/csv/${data.latestFile}`);
-        } else {
-          throw new Error("No CSV files found");
-        }
-      })
-      .then((response) => response.text())
-      .then((text) => {
-        const result = Papa.parse<DataRow>(text, {
-          header: true,
-          delimiter: ";",
+    const fetchData = () => {
+      fetch("/api/latest-csv")
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.latestFile) {
+            return fetch(`/csv/${data.latestFile}`);
+          } else {
+            throw new Error("No CSV files found");
+          }
+        })
+        .then((response) => response.text())
+        .then((text) => {
+          const result = Papa.parse<DataRow>(text, {
+            header: true,
+            delimiter: ";",
+          });
+          // Entferne den ersten Eintrag aus den Daten
+          result.data.shift();
+          const filteredData = calculateAverages(result.data);
+          const reversedData = filteredData.reverse();
+          setData(reversedData);
+          setLatestEntry(reversedData[0]);
+        })
+        .catch((error) => {
+          console.error("Fehler beim Laden der CSV-Datei:", error);
         });
-        // Entferne den ersten Eintrag aus den Daten
-        result.data.shift();
-        const filteredData = calculateAverages(result.data);
-        const reversedData = filteredData.reverse();
-        setData(reversedData);
-        setLatestEntry(reversedData[0]);
-      })
-      .catch((error) => {
-        console.error("Fehler beim Laden der CSV-Datei:", error);
-      });
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 5 * 60 * 1000); // Alle 5 Minuten aktualisieren
+
+    return () => clearInterval(intervalId); // Cleanup bei Komponentendemontage
   }, []);
 
   const calculateAverages = (data: DataRow[]) => {
@@ -93,20 +100,25 @@ export default function Home() {
         currentStartTime = row["Systemzeit "];
       }
 
-      if (quarterHour === currentQuarterHour) {
-        tempData.push(parseFloat(row.LAS.replace(",", ".")));
+      const lasValue = row.LAS ? row.LAS.replace(",", ".") : null;
+      if (lasValue && !isNaN(parseFloat(lasValue))) {
+        if (quarterHour === currentQuarterHour) {
+          tempData.push(parseFloat(lasValue));
+        } else {
+          const avgLAS = (
+            tempData.reduce((acc, val) => acc + val, 0) / tempData.length
+          ).toFixed(2);
+          result.push({
+            Datum: tempData.length > 0 ? row.Datum : "",
+            Systemzeit: truncateTime(currentStartTime!),
+            "LAS Mittelwert": avgLAS,
+          });
+          tempData = [parseFloat(lasValue)];
+          currentQuarterHour = quarterHour;
+          currentStartTime = row["Systemzeit "];
+        }
       } else {
-        const avgLAS = (
-          tempData.reduce((acc, val) => acc + val, 0) / tempData.length
-        ).toFixed(2);
-        result.push({
-          Datum: tempData.length > 0 ? row.Datum : "",
-          Systemzeit: truncateTime(currentStartTime!),
-          "LAS Mittelwert": avgLAS,
-        });
-        tempData = [parseFloat(row.LAS.replace(",", "."))];
-        currentQuarterHour = quarterHour;
-        currentStartTime = row["Systemzeit "];
+        console.warn("Ungültiger LAS-Wert in Zeile:", row);
       }
     });
 
@@ -214,6 +226,12 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4 ">
+      <img
+        src="/logo_woodone.png"
+        alt="Logo"
+        className="h-16 mx-auto text-center"
+      />
+
       <h1 className="text-2xl font-bold mb-4 text-white-900 mx-auto text-center">
         Messwerte - Festival
       </h1>
