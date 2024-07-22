@@ -93,7 +93,17 @@ export default function Home() {
     let currentStartTime: string | null = null;
 
     data.forEach((row: DataRow) => {
+      if (!row["Systemzeit "]) {
+        console.warn("Fehlende Systemzeit in Zeile:", row);
+        return;
+      }
+
       const timeParts = row["Systemzeit "].split(":");
+      if (timeParts.length < 2) {
+        console.warn("Ungültige Systemzeit in Zeile:", row);
+        return;
+      }
+
       const minutes = parseInt(timeParts[1], 10);
       const quarterHour = Math.floor(minutes / 15);
 
@@ -255,7 +265,7 @@ export default function Home() {
       </h1>
       {latestEntry && (
         <div
-          className={`p-4 mb-8 text-xl font-bold rounded-md text-black shadow-md shadow-gray-500 ${getLASClass(
+          className={`p-4 mb-8 text-xl font-bold rounded-md text-black shadow-md shadow-gray-700 ${getLASClass(
             latestEntry.Systemzeit,
             parseFloat(latestEntry["LAS Mittelwert"])
           )}`}
