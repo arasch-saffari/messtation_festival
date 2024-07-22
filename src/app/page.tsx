@@ -44,6 +44,10 @@ export default function Home() {
     "LAS Mittelwert",
   ]);
   const [latestEntry, setLatestEntry] = useState<ProcessedRow | null>(null);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof ProcessedRow;
+    direction: "asc" | "desc";
+  }>({ key: "Datum", direction: "asc" });
 
   useEffect(() => {
     fetch("/api/latest-csv")
@@ -180,6 +184,31 @@ export default function Home() {
     },
   };
 
+  const sortData = (key: keyof ProcessedRow) => {
+    const direction =
+      sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
+    const sortedData = [...data].sort((a, b) => {
+      if (key === "LAS Mittelwert") {
+        const aValue = parseFloat(a[key]);
+        const bValue = parseFloat(b[key]);
+        return direction === "asc" ? aValue - bValue : bValue - aValue;
+      } else {
+        return direction === "asc"
+          ? a[key].localeCompare(b[key])
+          : b[key].localeCompare(a[key]);
+      }
+    });
+    setData(sortedData);
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIcon = (key: keyof ProcessedRow) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === "asc" ? " ▲" : " ▼";
+    }
+    return " ◇";
+  };
+
   return (
     <div className="container mx-auto p-4 ">
       <h1 className="text-2xl font-bold mb-4 text-white-900 mx-auto text-center">
@@ -212,9 +241,11 @@ export default function Home() {
               {headers.map((header) => (
                 <th
                   key={header}
-                  className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-800"
+                  className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-800 cursor-pointer"
+                  onClick={() => sortData(header)}
                 >
                   {header}
+                  <span>{getSortIcon(header)}</span>
                 </th>
               ))}
             </tr>
