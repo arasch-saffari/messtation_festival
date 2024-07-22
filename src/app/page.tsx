@@ -64,8 +64,9 @@ export default function Home() {
           delimiter: ";",
         });
         const filteredData = calculateAverages(result.data);
-        setData(filteredData.reverse()); // Reverse the order of data
-        setLatestEntry(filteredData[0]); // Set the latest entry
+        const reversedData = filteredData.reverse(); // Reverse the order of data
+        setData(reversedData); // Set the reversed data for table
+        setLatestEntry(reversedData[0]); // Set the latest entry
       })
       .catch((error) => {
         console.error("Fehler beim Laden der CSV-Datei:", error);
@@ -131,13 +132,21 @@ export default function Home() {
     return "bg-red-200 text-red-800";
   };
 
+  const getLASEmoji = (las: number) => {
+    if (las <= 50) return "😊"; // Happy face for LAS <= 50
+    if (las <= 55) return "😐"; // Neutral face for LAS <= 55
+    return "😡"; // Angry face for LAS > 55
+  };
+
   // Prepare data for the chart
   const chartData = {
-    labels: data.map((row) => row.Systemzeit),
+    labels: [...data].reverse().map((row) => row.Systemzeit), // Reverse the labels for the chart
     datasets: [
       {
         label: "LAS Mittelwert",
-        data: data.map((row) => parseFloat(row["LAS Mittelwert"])),
+        data: [...data]
+          .reverse()
+          .map((row) => parseFloat(row["LAS Mittelwert"])), // Reverse the data for the chart
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 1,
@@ -176,27 +185,31 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-white-900">
+    <div className="container mx-auto p-4 ">
+      <h1 className="text-2xl font-bold mb-4 text-white-900 ">
         Mess-Station Daten
       </h1>
       {latestEntry && (
         <div
-          className={`p-4 mb-4 text-xl font-bold rounded-md text-black ${getLASClass(
+          className={`p-4 mb-4 text-xl font-bold rounded-md text-black shadow-xl shadow-gray-600 ${getLASClass(
             parseFloat(latestEntry["LAS Mittelwert"])
           )}`}
         >
           <p>Datum: {latestEntry.Datum}</p>
           <p>Systemzeit: {latestEntry.Systemzeit}</p>
-          <p>LAS Mittelwert: {latestEntry["LAS Mittelwert"]} dB</p>
+          <p>
+            LAS Mittelwert: {latestEntry["LAS Mittelwert"]} dB{" "}
+            {getLASEmoji(parseFloat(latestEntry["LAS Mittelwert"]))}
+          </p>
         </div>
       )}
-      <div className="bg-white border border-gray-300 p-4 mb-4 shadow-lg rounded-md">
+
+      <div className="bg-white border border-gray-300 p-4 mb-4 shadow-lg rounded-md shadow-xl shadow-gray-600">
         <h2 className="text-xl font-bold mb-2">LAS Mittelwert Graph</h2>
         <Line data={chartData} options={chartOptions} />
       </div>
 
-      <div className="overflow-x-auto rounded-md mb-4">
+      <div className="overflow-x-auto rounded-md mb-4 shadow-xl shadow-gray-600">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
