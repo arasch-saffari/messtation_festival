@@ -143,8 +143,8 @@ export default function Home() {
         data: [...data]
           .reverse()
           .map((row) => parseFloat(row["LAS Mittelwert"])),
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(151, 0, 255, 1)",
+        backgroundColor: "rgba(151, 0, 192, 0.2)",
         borderWidth: 1,
         fill: true,
       },
@@ -205,7 +205,7 @@ export default function Home() {
         <Line data={chartData} options={chartOptions} />
       </div>
 
-      <div className="overflow-x-auto rounded-md mb-4 shadow-md shadow-gray-500">
+      <div className="overflow-x-auto rounded-md mb-4 shadow-md shadow-gray-800">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
