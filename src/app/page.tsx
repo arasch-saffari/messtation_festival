@@ -147,13 +147,13 @@ export default function Home() {
     const timeParts = systemTime.split(":");
     const hour = parseInt(timeParts[0], 10);
     if (hour >= 6 && hour < 22) {
-      if (las >= 60) return "bg-red-200 text-red-800";
-      if (las >= 55) return "bg-yellow-200 text-yellow-800";
-      return "bg-green-200 text-green-800";
+      if (las >= 60) return "bg-red-600 text-white";
+      if (las >= 55) return "bg-yellow-600 text-white";
+      return "bg-green-600 text-white";
     } else {
-      if (las >= 45) return "bg-red-200 text-red-800";
-      if (las >= 43) return "bg-yellow-200 text-yellow-800";
-      return "bg-green-200 text-green-800";
+      if (las >= 45) return "bg-red-600 text-white";
+      if (las >= 43) return "bg-yellow-600 text-white";
+      return "bg-green-600 text-white";
     }
   };
 
