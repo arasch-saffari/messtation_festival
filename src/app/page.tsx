@@ -46,12 +46,10 @@ export default function Home() {
   const [latestEntry, setLatestEntry] = useState<ProcessedRow | null>(null);
 
   useEffect(() => {
-    // Fetch the latest CSV file name from the API endpoint
     fetch("/api/latest-csv")
       .then((response) => response.json())
       .then((data) => {
         if (data.latestFile) {
-          // Load the latest CSV file
           return fetch(`/csv/${data.latestFile}`);
         } else {
           throw new Error("No CSV files found");
@@ -64,9 +62,9 @@ export default function Home() {
           delimiter: ";",
         });
         const filteredData = calculateAverages(result.data);
-        const reversedData = filteredData.reverse(); // Reverse the order of data
-        setData(reversedData); // Set the reversed data for table
-        setLatestEntry(reversedData[0]); // Set the latest entry
+        const reversedData = filteredData.reverse();
+        setData(reversedData);
+        setLatestEntry(reversedData[0]);
       })
       .catch((error) => {
         console.error("Fehler beim Laden der CSV-Datei:", error);
@@ -106,7 +104,6 @@ export default function Home() {
       }
     });
 
-    // Calculate the last segment
     if (tempData.length > 0) {
       const avgLAS = (
         tempData.reduce((acc, val) => acc + val, 0) / tempData.length
@@ -133,20 +130,19 @@ export default function Home() {
   };
 
   const getLASEmoji = (las: number) => {
-    if (las <= 50) return "😊"; // Happy face for LAS <= 50
-    if (las <= 55) return "😐"; // Neutral face for LAS <= 55
-    return "😡"; // Angry face for LAS > 55
+    if (las <= 50) return "😊";
+    if (las <= 55) return "😐";
+    return "😡";
   };
 
-  // Prepare data for the chart
   const chartData = {
-    labels: [...data].reverse().map((row) => row.Systemzeit), // Reverse the labels for the chart
+    labels: [...data].reverse().map((row) => row.Systemzeit),
     datasets: [
       {
         label: "LAS Mittelwert",
         data: [...data]
           .reverse()
-          .map((row) => parseFloat(row["LAS Mittelwert"])), // Reverse the data for the chart
+          .map((row) => parseFloat(row["LAS Mittelwert"])),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 1,
@@ -186,12 +182,12 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4 ">
-      <h1 className="text-2xl font-bold mb-4 text-white-900 ">
-        Mess-Station Daten
+      <h1 className="text-2xl font-bold mb-4 text-white-900 mx-auto text-center">
+        Mess-Station - Zug Vögel Festival
       </h1>
       {latestEntry && (
         <div
-          className={`p-4 mb-4 text-xl font-bold rounded-md text-black shadow-xl shadow-gray-600 ${getLASClass(
+          className={`p-4 mb-8 text-xl font-bold rounded-md text-black shadow-xl shadow-gray-600 ${getLASClass(
             parseFloat(latestEntry["LAS Mittelwert"])
           )}`}
         >
@@ -204,7 +200,7 @@ export default function Home() {
         </div>
       )}
 
-      <div className="bg-white border border-gray-300 p-4 mb-4 shadow-lg rounded-md shadow-xl shadow-gray-600">
+      <div className="bg-white border border-gray-300 p-4 mb-8 shadow-lg rounded-md shadow-xl shadow-gray-600">
         <h2 className="text-xl font-bold mb-2">LAS Mittelwert Graph</h2>
         <Line data={chartData} options={chartOptions} />
       </div>
