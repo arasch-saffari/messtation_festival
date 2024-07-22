@@ -128,9 +128,17 @@ export default function Home() {
   };
 
   const getLASClass = (las: number) => {
-    if (las <= 50) return "bg-green-200 text-green-800";
-    if (las <= 55) return "bg-yellow-200 text-yellow-800";
-    return "bg-red-200 text-red-800";
+    const currentHour = new Date().getHours();
+
+    if (currentHour >= 6 && currentHour < 22) {
+      if (las >= 60) return "bg-red-200 text-red-800";
+      if (las >= 55 && las < 60) return "bg-yellow-200 text-yellow-800";
+      return "bg-green-200 text-green-800";
+    } else {
+      if (las >= 45) return "bg-red-200 text-red-800";
+      if (las >= 43 && las < 45) return "bg-yellow-200 text-yellow-800";
+      return "bg-green-200 text-green-800";
+    }
   };
 
   const getLASEmoji = (las: number) => {
@@ -213,7 +221,7 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4 ">
       <h1 className="text-2xl font-bold mb-4 text-white-900 mx-auto text-center">
-        Messwerte - Zug Vögel Festival
+        Messwerte - Festival
       </h1>
       {latestEntry && (
         <div
