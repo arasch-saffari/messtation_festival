@@ -81,6 +81,9 @@ export default function Home() {
     let currentQuarterHour: number | null = null;
     let currentStartTime: string | null = null;
 
+    // Skip the first two entries
+    data = data.slice(2);
+
     data.forEach((row: DataRow) => {
       const timeParts = row["Systemzeit "].split(":");
       const minutes = parseInt(timeParts[1], 10);
