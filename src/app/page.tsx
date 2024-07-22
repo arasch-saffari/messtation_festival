@@ -226,7 +226,7 @@ export default function Home() {
           <p>Datum: {latestEntry.Datum}</p>
           <p>Systemzeit: {latestEntry.Systemzeit}</p>
           <p>
-            LAS Mittelwert: {latestEntry["LAS Mittelwert"]} dB{" "}
+            LAS Mittelwert: {latestEntry["LAS Mittelwert"]} dB (A){" "}
             {getLASEmoji(parseFloat(latestEntry["LAS Mittelwert"]))}
           </p>
         </div>
