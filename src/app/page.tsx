@@ -183,7 +183,7 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4 ">
       <h1 className="text-2xl font-bold mb-4 text-white-900 mx-auto text-center">
-        Messwerte - Zug Vögel
+        Mess-Station - Zug Vögel Festival
       </h1>
       {latestEntry && (
         <div
@@ -200,7 +200,7 @@ export default function Home() {
         </div>
       )}
 
-      <div className="bg-white border border-gray-300 p-4 mb-8y shadow-lg rounded-md shadow-xl shadow-gray-600">
+      <div className="bg-white border border-gray-300 p-4 mb-8 rounded-md shadow-xl shadow-gray-600">
         <h2 className="text-xl font-bold mb-2">LAS Mittelwert Graph</h2>
         <Line data={chartData} options={chartOptions} />
       </div>
