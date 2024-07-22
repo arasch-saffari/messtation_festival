@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Papa from "papaparse";
 import { Line } from "react-chartjs-2";
+import Image from "next/image";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -81,7 +82,7 @@ export default function Home() {
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 3 * 60 * 1000); // Alle 3 Minuten aktualisieren
+    const intervalId = setInterval(fetchData, 60 * 1000); // Jede Minute aktualisieren
 
     return () => clearInterval(intervalId); // Cleanup bei Komponentendemontage
   }, []);
@@ -256,7 +257,14 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
-      <img src="/logo_woodone.png" alt="Logo" className="h-16 mx-auto mb-4" />
+      <div className="relative h-16 mx-auto mb-4" style={{ width: "500px" }}>
+        <Image
+          src="/logo_woodone.png"
+          alt="Logo"
+          layout="fill"
+          objectFit="contain"
+        />
+      </div>
       <h1 className="text-2xl font-bold mb-4 text-center text-white tracking-wider">
         Messwerte - Festival
       </h1>
