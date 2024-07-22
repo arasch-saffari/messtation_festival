@@ -5,7 +5,7 @@ import path from 'path';
 export async function GET() {
   const csvDir = path.join(process.cwd(), 'public', 'csv');
   try {
-    const files = fs.readdirSync(csvDir);
+    const files = fs.readdirSync(csvDir).filter(file => file !== '_gsdata_');
     // Filter for CSV files
     const csvFiles = files.filter(file => file.endsWith('.csv'));
     // Sort files by creation time, descending

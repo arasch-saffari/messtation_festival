@@ -7,8 +7,8 @@ export async function GET() {
     // Pfad zum public-Verzeichnis
     const csvDir = path.join(process.cwd(), 'public', 'csv');
     
-    // Liest alle Dateien im Verzeichnis
-    const files = fs.readdirSync(csvDir);
+    // Liest alle Dateien im Verzeichnis und schließt '_gsdata_' aus
+    const files = fs.readdirSync(csvDir).filter(file => file !== '_gsdata_');
     
     if (files.length === 0) {
       return NextResponse.json({ error: 'No files found' }, { status: 404 });
