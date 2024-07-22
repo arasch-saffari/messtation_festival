@@ -262,7 +262,7 @@ export default function Home() {
       </h1>
       {latestEntry && (
         <div
-          className={`p-4 pb-6 mb-8 text-xl font-bold rounded-md shadow-md tracking-wider	${getLASClass(
+          className={`p-4 pb-6 mb-8 text-xl font-bold rounded-md shadow-md tracking-wide	${getLASClass(
             latestEntry.Systemzeit,
             parseFloat(latestEntry["LAS Mittelwert"])
           )}`}
