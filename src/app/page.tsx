@@ -81,7 +81,7 @@ export default function Home() {
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 5 * 60 * 1000); // Alle 5 Minuten aktualisieren
+    const intervalId = setInterval(fetchData, 3 * 60 * 1000); // Alle 3 Minuten aktualisieren
 
     return () => clearInterval(intervalId); // Cleanup bei Komponentendemontage
   }, []);
