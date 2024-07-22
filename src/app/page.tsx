@@ -187,7 +187,7 @@ export default function Home() {
       </h1>
       {latestEntry && (
         <div
-          className={`p-4 mb-8 text-xl font-bold rounded-md text-black shadow-xl shadow-gray-600 ${getLASClass(
+          className={`p-4 mb-8 text-xl font-bold rounded-md text-black shadow-md shadow-gray-500 ${getLASClass(
             parseFloat(latestEntry["LAS Mittelwert"])
           )}`}
         >
@@ -200,19 +200,19 @@ export default function Home() {
         </div>
       )}
 
-      <div className="bg-white border border-gray-300 p-4 mb-8 rounded-md shadow-xl shadow-gray-600">
+      <div className="bg-white border border-gray-300 p-4 mb-8 rounded-md shadow-md shadow-gray-500">
         <h2 className="text-xl font-bold mb-2">LAS Mittelwert Graph</h2>
         <Line data={chartData} options={chartOptions} />
       </div>
 
-      <div className="overflow-x-auto rounded-md mb-4 shadow-xl shadow-gray-600">
+      <div className="overflow-x-auto rounded-md mb-4 shadow-md shadow-gray-500">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
               {headers.map((header) => (
                 <th
                   key={header}
-                  className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700"
+                  className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-800"
                 >
                   {header}
                 </th>
