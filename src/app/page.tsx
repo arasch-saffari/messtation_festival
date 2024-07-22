@@ -180,6 +180,7 @@ export default function Home() {
           text: "LAS Mittelwert (dB)",
         },
         beginAtZero: true,
+        min: 25, // Set the minimum value of the y-axis to 25
       },
     },
   };
