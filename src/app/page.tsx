@@ -143,16 +143,32 @@ export default function Home() {
     return `${timeParts[0]}:${timeParts[1]}`;
   };
 
-  const getLASClass = (las: number) => {
-    if (las <= 50) return "bg-green-200 text-green-800";
-    if (las <= 55) return "bg-yellow-200 text-yellow-800";
-    return "bg-red-200 text-red-800";
+  const getLASClass = (systemTime: string, las: number) => {
+    const timeParts = systemTime.split(":");
+    const hour = parseInt(timeParts[0], 10);
+    if (hour >= 6 && hour < 22) {
+      if (las >= 60) return "bg-red-200 text-red-800";
+      if (las >= 55) return "bg-yellow-200 text-yellow-800";
+      return "bg-green-200 text-green-800";
+    } else {
+      if (las >= 45) return "bg-red-200 text-red-800";
+      if (las >= 43) return "bg-yellow-200 text-yellow-800";
+      return "bg-green-200 text-green-800";
+    }
   };
 
-  const getLASEmoji = (las: number) => {
-    if (las <= 50) return "😊";
-    if (las <= 55) return "😐";
-    return "😡";
+  const getLASEmoji = (systemTime: string, las: number) => {
+    const timeParts = systemTime.split(":");
+    const hour = parseInt(timeParts[0], 10);
+    if (hour >= 6 && hour < 22) {
+      if (las >= 60) return "😡";
+      if (las >= 55) return "😐";
+      return "😊";
+    } else {
+      if (las >= 45) return "😡";
+      if (las >= 43) return "😐";
+      return "😊";
+    }
   };
 
   const chartData = {
@@ -240,6 +256,7 @@ export default function Home() {
       {latestEntry && (
         <div
           className={`p-4 mb-8 text-xl font-bold rounded-md text-black shadow-md shadow-gray-500 ${getLASClass(
+            latestEntry.Systemzeit,
             parseFloat(latestEntry["LAS Mittelwert"])
           )}`}
         >
@@ -247,7 +264,10 @@ export default function Home() {
           <p>Systemzeit: {latestEntry.Systemzeit}</p>
           <p>
             LAS Mittelwert: {latestEntry["LAS Mittelwert"]} dB (A){" "}
-            {getLASEmoji(parseFloat(latestEntry["LAS Mittelwert"]))}
+            {getLASEmoji(
+              latestEntry.Systemzeit,
+              parseFloat(latestEntry["LAS Mittelwert"])
+            )}
           </p>
         </div>
       )}
@@ -284,7 +304,7 @@ export default function Home() {
                     key={header}
                     className={`py-2 px-4 border-b border-gray-300 text-sm text-gray-900 ${
                       header === "LAS Mittelwert"
-                        ? getLASClass(parseFloat(row[header]))
+                        ? getLASClass(row.Systemzeit, parseFloat(row[header]))
                         : ""
                     }`}
                   >
