@@ -81,9 +81,6 @@ export default function Home() {
     let currentQuarterHour: number | null = null;
     let currentStartTime: string | null = null;
 
-    // Skip the first two entries
-    data = data.slice(2);
-
     data.forEach((row: DataRow) => {
       const timeParts = row["Systemzeit "].split(":");
       const minutes = parseInt(timeParts[1], 10);
@@ -131,17 +128,9 @@ export default function Home() {
   };
 
   const getLASClass = (las: number) => {
-    const currentHour = new Date().getHours();
-
-    if (currentHour >= 6 && currentHour < 22) {
-      if (las >= 60) return "bg-red-200 text-red-800";
-      if (las >= 55 && las < 60) return "bg-yellow-200 text-yellow-800";
-      return "bg-green-200 text-green-800";
-    } else {
-      if (las >= 45) return "bg-red-200 text-red-800";
-      if (las >= 43 && las < 45) return "bg-yellow-200 text-yellow-800";
-      return "bg-green-200 text-green-800";
-    }
+    if (las <= 50) return "bg-green-200 text-green-800";
+    if (las <= 55) return "bg-yellow-200 text-yellow-800";
+    return "bg-red-200 text-red-800";
   };
 
   const getLASEmoji = (las: number) => {
