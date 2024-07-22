@@ -122,7 +122,7 @@ export default function Home() {
           ).toFixed(2);
           result.push({
             Datum: tempData.length > 0 ? row.Datum : "",
-            Systemzeit: truncateTime(currentStartTime!),
+            Systemzeit: formatTime(currentStartTime!),
             "LAS Mittelwert": avgLAS,
           });
           tempData = [parseFloat(lasValue)];
@@ -140,7 +140,7 @@ export default function Home() {
       ).toFixed(2);
       result.push({
         Datum: data[data.length - 1].Datum,
-        Systemzeit: truncateTime(currentStartTime!),
+        Systemzeit: formatTime(currentStartTime!),
         "LAS Mittelwert": avgLAS,
       });
     }
@@ -148,22 +148,24 @@ export default function Home() {
     return result;
   };
 
-  const truncateTime = (time: string) => {
+  const formatTime = (time: string) => {
     const timeParts = time.split(":");
-    return `${timeParts[0]}:${timeParts[1]}`;
+    const hours = timeParts[0].padStart(2, "0");
+    const minutes = timeParts[1].padStart(2, "0");
+    return `${hours}:${minutes}`;
   };
 
   const getLASClass = (systemTime: string, las: number) => {
     const timeParts = systemTime.split(":");
     const hour = parseInt(timeParts[0], 10);
     if (hour >= 6 && hour < 22) {
-      if (las >= 60) return "bg-red-600 text-white";
-      if (las >= 55) return "bg-yellow-600 text-white";
-      return "bg-green-600 text-white";
+      if (las >= 60) return "bg-red-500 text-white";
+      if (las >= 55) return "bg-yellow-500 text-black";
+      return "bg-green-500 text-white";
     } else {
-      if (las >= 45) return "bg-red-600 text-white";
-      if (las >= 43) return "bg-yellow-600 text-white";
-      return "bg-green-600 text-white";
+      if (las >= 45) return "bg-red-500 text-white";
+      if (las >= 43) return "bg-yellow-500 text-black";
+      return "bg-green-500 text-white";
     }
   };
 
@@ -222,7 +224,7 @@ export default function Home() {
           text: "LAS Mittelwert (dB)",
         },
         beginAtZero: true,
-        min: 20, // Set the minimum value of the y-axis to 25
+        min: 20, // Set the minimum value of the y-axis to 20
       },
     },
   };
@@ -253,19 +255,14 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto p-4 ">
-      <img
-        src="/logo_woodone.png"
-        alt="Logo"
-        className="h-16 mx-auto text-center"
-      />
-
-      <h1 className="text-2xl font-bold mb-4 text-white-900 mx-auto text-center">
+    <div className="container mx-auto p-4">
+      <img src="/logo_woodone.png" alt="Logo" className="h-16 mx-auto mb-4" />
+      <h1 className="text-2xl font-bold mb-4 text-center text-white tracking-wider">
         Messwerte - Festival
       </h1>
       {latestEntry && (
         <div
-          className={`p-4 mb-8 text-xl font-bold rounded-md text-black shadow-md shadow-gray-700 ${getLASClass(
+          className={`p-4 pb-6 mb-8 text-xl font-bold rounded-md shadow-md tracking-wider	${getLASClass(
             latestEntry.Systemzeit,
             parseFloat(latestEntry["LAS Mittelwert"])
           )}`}
@@ -282,12 +279,12 @@ export default function Home() {
         </div>
       )}
 
-      <div className="bg-white border border-gray-300 p-4 mb-8 rounded-md shadow-md shadow-gray-500">
+      <div className="bg-white border border-gray-300 p-4 mb-8 rounded-md shadow-md">
         <h2 className="text-xl font-bold mb-2">LAS Mittelwert Graph</h2>
         <Line data={chartData} options={chartOptions} />
       </div>
 
-      <div className="overflow-x-auto rounded-md mb-4 shadow-md shadow-gray-800">
+      <div className="overflow-x-auto rounded-md mb-4 shadow-md">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
@@ -307,7 +304,7 @@ export default function Home() {
             {data.map((row, index) => (
               <tr
                 key={index}
-                className={`bg-white ${index % 2 === 0 ? "bg-gray-50" : ""}`}
+                className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
               >
                 {headers.map((header) => (
                   <td
