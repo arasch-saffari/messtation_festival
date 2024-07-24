@@ -183,14 +183,12 @@ export default function Home() {
     }
   };
 
-  const limitedData = data.slice(0, 40); // Begrenze die Anzahl der Einträge auf maximal 40
-
   const chartData = {
-    labels: limitedData.reverse().map((row) => row.Systemzeit),
+    labels: [...data].reverse().map((row) => row.Systemzeit),
     datasets: [
       {
         label: "LAS Mittelwert",
-        data: limitedData
+        data: [...data]
           .reverse()
           .map((row) => parseFloat(row["LAS Mittelwert"])),
         borderColor: "rgba(151, 0, 255, 1)",
