@@ -282,7 +282,7 @@ export default function Home() {
       )}
 
       <div className="bg-white border border-gray-300 p-4 mb-8 rounded-md shadow-md">
-        <h2 className="text-xl font-bold mb-2 text-black">
+        <h2 className="text-xl font-bold mb-4 text-black">
           LAS Mittelwert Graph
         </h2>
         <Line data={chartData} options={chartOptions} />
